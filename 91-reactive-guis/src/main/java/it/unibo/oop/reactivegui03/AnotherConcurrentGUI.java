@@ -41,11 +41,11 @@ public final class AnotherConcurrentGUI extends JFrame {
         new Thread(() -> {
             try {
                 Thread.sleep(10000);
-                agent.stopCounting();
-                stop.setEnabled(false);
-                up.setEnabled(false);
-                down.setEnabled(false);
-            } catch (InterruptedException ex) {
+                SwingUtilities.invokeAndWait(() -> agent.stopCounting());
+                SwingUtilities.invokeAndWait(() -> AnotherConcurrentGUI.this.stop.setEnabled(false));
+                SwingUtilities.invokeAndWait(() -> AnotherConcurrentGUI.this.up.setEnabled(false));
+                SwingUtilities.invokeAndWait(() -> AnotherConcurrentGUI.this.down.setEnabled(false));
+            } catch (InterruptedException | InvocationTargetException ex) {
                 JOptionPane.showMessageDialog(display, ex, "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }
@@ -83,10 +83,7 @@ public final class AnotherConcurrentGUI extends JFrame {
                     }
                     Thread.sleep(100);
                 } catch (InvocationTargetException | InterruptedException ex) {
-                    /*
-                     * This is just a stack trace print, in a real program there
-                     * should be some logging and decent error reporting
-                     */
+                    JOptionPane.showMessageDialog(display, ex, "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
             }
